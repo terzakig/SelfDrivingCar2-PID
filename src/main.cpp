@@ -35,7 +35,7 @@ int main()
   PID steer_pid(100);
   PID throttle_pid(50);
   // TODO: Initialize the pid variable.
-  steer_pid.Init( .1 , 1.55 , 0.00045, false);
+  steer_pid.Init( .15 , 1.7 , 0.00045, false);
   throttle_pid.Init(1, 17, 0.0101, false);
   h.onMessage([&steer_pid, &throttle_pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -62,7 +62,7 @@ int main()
 	  steer_pid.UpdateError(cte);
           throttle_pid.UpdateError(fabs(cte));
           
-	  double steer_y = (0.01 + speed)/8*steer_pid.Feedback(); // make PID feedback sensitive to speed.
+	  double steer_y = (0.01 + speed)/15*steer_pid.Feedback(); // make PID feedback sensitive to speed.
 	  //steer_value = -1 + 2 / (1 + exp(-(1 + speed) * steer_y) ); // use the logistic function to map steer andgle to [-1, 1]
           double throttle_y = steer_pid.Feedback();
           
@@ -78,14 +78,14 @@ int main()
 	  */
 	  // thrtlle feedback is ran throughg the logistic. 
 	  // To be honest, the trottle controller is not really needed. Fixed thrttle 0.3 ort less should suffice.
-	  throttle_value = .75 / (1 + exp(-throttle_y) );
+	  throttle_value = .8 / (1 + exp(-throttle_y) );
 	  // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = throttle_value;
-          //msgJson["throttle"] = .3;
+          //msgJson["throttle"] = .7;
           
 	  auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
