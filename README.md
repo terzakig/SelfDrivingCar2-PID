@@ -8,6 +8,9 @@ I controller is implemented by the `PID` class. The class uses method `init` to 
 ### Compiling and Executing
 Compling and running should be straightforward:
 ```
+
+./install_ubuntu.sh
+mkdir build
 cd build
 cmake ..
 make
